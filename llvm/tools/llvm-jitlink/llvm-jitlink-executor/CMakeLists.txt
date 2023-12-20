@@ -19,4 +19,8 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "SunOS")
   target_link_libraries(llvm-jitlink-executor PRIVATE socket)
 endif()
 
+if(${CMAKE_SYSTEM_NAME} MATCHES "Fuso")
+  target_link_libraries(llvm-jitlink-executor PRIVATE socket)
+endif()
+
 export_executable_symbols(llvm-jitlink-executor)

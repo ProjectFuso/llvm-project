@@ -1105,6 +1105,11 @@ if (UNIX AND ${CMAKE_SYSTEM_NAME} MATCHES "SunOS")
           add_compile_definitions(_FILE_OFFSET_BITS=64)
 endif()
 
+# Build with _FILE_OFFSET_BITS=64 on Project Fuso
+if (UNIX AND ${CMAKE_SYSTEM_NAME} MATCHES "Fuso")
+          add_compile_definitions(_FILE_OFFSET_BITS=64)
+endif()
+
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 include_directories( ${LLVM_INCLUDE_DIR} ${LLVM_MAIN_INCLUDE_DIR})
@@ -1123,6 +1128,11 @@ if( ${CMAKE_SYSTEM_NAME} MATCHES SunOS )
    # special hack for Solaris to handle crazy system sys/regset.h
    include_directories("${LLVM_MAIN_INCLUDE_DIR}/llvm/Support/Solaris")
 endif( ${CMAKE_SYSTEM_NAME} MATCHES SunOS )
+
+if( ${CMAKE_SYSTEM_NAME} MATCHES Fuso )
+   # inherit the same hack for Project Fuso for now
+   include_directories("${LLVM_MAIN_INCLUDE_DIR}/llvm/Support/Solaris")
+endif( ${CMAKE_SYSTEM_NAME} MATCHES Fuso )
 
 # Make sure we don't get -rdynamic in every binary. For those that need it,
 # use export_executable_symbols(target).

@@ -219,6 +219,7 @@ StringRef Triple::getOSTypeName(OSType Kind) {
   case Emscripten: return "emscripten";
   case FreeBSD: return "freebsd";
   case Fuchsia: return "fuchsia";
+  case Fuso: return "fuso";
   case Haiku: return "haiku";
   case HermitCore: return "hermit";
   case Hurd: return "hurd";
@@ -563,6 +564,7 @@ static Triple::OSType parseOS(StringRef OSName) {
     .StartsWith("dragonfly", Triple::DragonFly)
     .StartsWith("freebsd", Triple::FreeBSD)
     .StartsWith("fuchsia", Triple::Fuchsia)
+    .StartsWith("fuso", Triple::Fuso)
     .StartsWith("ios", Triple::IOS)
     .StartsWith("kfreebsd", Triple::KFreeBSD)
     .StartsWith("linux", Triple::Linux)

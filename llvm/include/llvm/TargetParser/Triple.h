@@ -199,6 +199,7 @@ public:
     NetBSD,
     OpenBSD,
     Solaris,
+    Fuso, // Project Fuso
     Win32,
     ZOS,
     Haiku,

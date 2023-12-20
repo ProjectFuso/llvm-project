@@ -285,6 +285,59 @@ public:
   using OSTargetInfo<Target>::OSTargetInfo;
 };
 
+// Project Fuso Target
+template <typename Target>
+class LLVM_LIBRARY_VISIBILITY FusoTargetInfo : public OSTargetInfo<Target> {
+protected:
+  void getOSDefines(const LangOptions &Opts, const llvm::Triple &Triple,
+                    MacroBuilder &Builder) const override {
+    DefineStd(Builder, "sun", Opts);
+    DefineStd(Builder, "unix", Opts);
+    DefineStd(Builder, "fuso", Opts);
+    Builder.defineMacro("__ELF__");
+    Builder.defineMacro("__svr4__");
+    Builder.defineMacro("__SVR4");
+    // Solaris headers require _XOPEN_SOURCE to be set to 600 for C99 and
+    // newer, but to 500 for everything else.  feature_test.h has a check to
+    // ensure that you are not using C99 with an old version of X/Open or C89
+    // with a new version.
+    if (Opts.C99)
+      Builder.defineMacro("_XOPEN_SOURCE", "600");
+    else
+      Builder.defineMacro("_XOPEN_SOURCE", "500");
+    if (Opts.CPlusPlus) {
+      Builder.defineMacro("__C99FEATURES__");
+      Builder.defineMacro("_FILE_OFFSET_BITS", "64");
+    }
+    // GCC restricts the next two to C++.
+    Builder.defineMacro("_LARGEFILE_SOURCE");
+    Builder.defineMacro("_LARGEFILE64_SOURCE");
+    Builder.defineMacro("__EXTENSIONS__");
+    if (Opts.POSIXThreads)
+      Builder.defineMacro("_REENTRANT");
+    if (this->HasFloat128)
+      Builder.defineMacro("__FLOAT128__");
+  }
+
+public:
+  FusoTargetInfo(const llvm::Triple &Triple, const TargetOptions &Opts)
+      : OSTargetInfo<Target>(Triple, Opts) {
+    if (this->PointerWidth == 64) {
+      this->WCharType = this->WIntType = this->SignedInt;
+    } else {
+      this->WCharType = this->WIntType = this->SignedLong;
+    }
+    switch (Triple.getArch()) {
+    default:
+      break;
+    case llvm::Triple::x86:
+    case llvm::Triple::x86_64:
+      this->HasFloat128 = true;
+      break;
+    }
+  }
+};
+
 // Haiku Target
 template <typename Target>
 class LLVM_LIBRARY_VISIBILITY HaikuTargetInfo : public OSTargetInfo<Target> {

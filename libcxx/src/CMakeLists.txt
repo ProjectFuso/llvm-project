@@ -107,6 +107,12 @@ elseif("${CMAKE_SYSTEM_NAME}" STREQUAL "SunOS")
     support/solaris/wcsnrtombs.inc
     support/solaris/xlocale.cpp
     )
+elseif("${CMAKE_SYSTEM_NAME}" STREQUAL "Fuso")
+  list(APPEND LIBCXX_SOURCES
+    support/fuso/mbsnrtowcs.inc
+    support/fuso/wcsnrtombs.inc
+    support/fuso/xlocale.cpp
+    )
 elseif(ZOS)
   list(APPEND LIBCXX_SOURCES
     support/ibm/mbsnrtowcs.cpp
@@ -285,6 +291,12 @@ if (LIBCXX_ENABLE_SHARED)
     set_target_properties(cxx_shared PROPERTIES
                           APPEND_STRING PROPERTY LINK_FLAGS " /MANIFEST:NO")
   endif()
+
+  if(${CMAKE_SYSTEM_NAME} MATCHES "Fuso")
+    # Needs -lsendfile on Project Fuso
+    set_target_properties(cxx_shared PROPERTIES
+                          APPEND_STRING PROPERTY LINK_FLAGS "-lsendfile")
+  endif()
 endif()
 
 set(CMAKE_STATIC_LIBRARY_PREFIX "lib")
@@ -322,6 +334,12 @@ if (LIBCXX_ENABLE_STATIC)
   # Attempt to merge the libc++.a archive and the ABI library archive into one.
   if (LIBCXX_STATICALLY_LINK_ABI_IN_STATIC_LIBRARY)
     target_link_libraries(cxx_static PRIVATE libcxx-abi-static-objects)
+  endif()
+
+  if(${CMAKE_SYSTEM_NAME} MATCHES "Fuso")
+    # Needs -lsendfile on Project Fuso
+    set_target_properties(cxx_static PROPERTIES
+                          APPEND_STRING PROPERTY LINK_FLAGS "-lsendfile")
   endif()
 endif()
 

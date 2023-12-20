@@ -542,6 +542,9 @@ set(files
   __string/extern_template_lists.h
   __support/android/locale_bionic.h
   __support/fuchsia/xlocale.h
+  __support/fuso/floatingpoint.h
+  __support/fuso/wchar.h
+  __support/fuso/xlocale.h
   __support/ibm/gettod_zos.h
   __support/ibm/locale_mgmt_zos.h
   __support/ibm/nanosleep.h
